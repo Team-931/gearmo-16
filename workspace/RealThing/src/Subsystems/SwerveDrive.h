@@ -30,7 +30,6 @@ private:
    complex speedGoal;
    static uint32_t ix;
    uint32_t this_ix;
-/*   size_t GetIx();  */ // I got too clever
    static constexpr double maxRot =
 # if OldEncoder
 	 206.75; // actually 1/2 of 413.5 rot
