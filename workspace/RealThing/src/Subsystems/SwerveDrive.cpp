@@ -18,7 +18,7 @@ void SwerveDrive::InitDefaultCommand()
 // These should each be {y, -x}
 // where (x, y) is the vector of
 // this wheel from the center of rotation.
-static const float length = 24.203125; // check measure
+static const float length = 24.203125; // TODO: check measure
 static const float width  = 21.25; //   "       "
 static const float rot_scale = 1/sqrt(length*length + width*width);
 static const float rot_length = length * rot_scale;
@@ -69,10 +69,6 @@ void SwerveDrive::Drive(float x, float y, float rot, float throttle, bool align)
  }
 
 uint32_t SwerveDrive::Wheel::ix = 0;
-/*//Still too clever.
-size_t SwerveDrive::Wheel::GetIx()
- {return this-CommandBase::swerveDrive->wheels;}
-*/
 
 void SwerveDrive::Wheel::Drive(complex vec, bool align)
  {speedGoal = align?0: vec;
