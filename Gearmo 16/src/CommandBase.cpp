@@ -30,12 +30,12 @@ void CommandBase::init(RobotBase *robo)
 	// line should be repeated for each subsystem in the project.
 	robot = robo;
 	swerveDrive = new SwerveDrive();
-	elevator = new Elevator();
+	//elevator = new Elevator();
 	SmartDashboard::PutData(swerveDrive);
 	SmartDashboard::PutData(new PIDAdjust);
 //	SmartDashboard::PutNumber("Drive P", .125);
 //	SmartDashboard::PutNumber("Drive I", 0);
 //	SmartDashboard::PutNumber("Drive D", 0);
-	SmartDashboard::PutData(elevator);
+//	SmartDashboard::PutData(elevator);
 	oi = new OI();
 }

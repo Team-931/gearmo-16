@@ -30,12 +30,12 @@ private:
 	{
 		CommandBase::init(this);
 		autonomousCommand = 0; //TODO: real autonomous
-		autoChooser.AddObject("totefield", new autoner(2.65)/*new Auto1*/);
-		autoChooser.AddObject("toteramp", new autoner(3)/*new Auto2*/);
-		autoChooser.AddObject("totebinfield", new autonerbot(2.85)/*new Auto3*/);
-		autoChooser.AddObject("totebinramp", new autonerbot(3.25)/*new Auto4*/);
-		autoChooser.AddDefault("nothing",0);
-		SmartDashboard::PutData("Which autonomous?", &autoChooser);
+		//autoChooser.AddObject("totefield", new autoner(2.65)/*new Auto1*/);
+		//autoChooser.AddObject("toteramp", new autoner(3)/*new Auto2*/);
+		//autoChooser.AddObject("totebinfield", new autonerbot(2.85)/*new Auto3*/);
+		//autoChooser.AddObject("totebinramp", new autonerbot(3.25)/*new Auto4*/);
+		//autoChooser.AddDefault("nothing",0);
+		//SmartDashboard::PutData("Which autonomous?", &autoChooser);
 		lw = LiveWindow::GetInstance();
 	}
 	
@@ -52,7 +52,7 @@ private:
 	}
 
 	void AutonomousPeriodic()
-	{SmartDashboard::PutNumber("elev on target", CommandBase::elevator->OnTarget());
+	{//SmartDashboard::PutNumber("elev on target", CommandBase::elevator->OnTarget());
 		Scheduler::GetInstance()->Run();
 	}
 
@@ -68,7 +68,7 @@ private:
 
 	void TeleopPeriodic()
 	{
-# if 1
+# if 0
 	  if(CommandBase::oi->ElevStick().GetRawButton(1))
 	  {CommandBase::elevator->Brake().Set(Relay::kForward);
 	   SmartDashboard::PutString("Brake", "on");}

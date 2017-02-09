@@ -4,6 +4,7 @@
 #include "Commands/Subsystem.h"
 #include "WPILib.h"
 #include "complex"
+#include "CANTalon.h"
 # define newdrivestick 1
 //#include "CommandBase.h"
 # define OldEncoder 0
@@ -26,7 +27,7 @@ private:
 # else
    AnalogInput encoder;
 # endif
-   Talon rotSpeed, drvSpeed; /*the motors are cims and pg (34?) .*/
+   CANTalon rotSpeed, drvSpeed; /*the motors are cims and pg (34?) .*/
    complex speedGoal;
    static uint32_t ix;
    uint32_t this_ix;
@@ -48,12 +49,8 @@ private:
    }
 	public:
    Wheel(): PIDController(2/maxRot, 0, 0, this,&rotSpeed),
-# if OldEncoder
-	  encoder(2*ix,2*ix+1),
-# else
 	  encoder(ix),
-# endif
-	  rotSpeed(ix/*2*ix+1*/),drvSpeed(numWheels + ix/*2*ix++*/),
+	  rotSpeed(ix + 1),drvSpeed(numWheels + ix + 1),
 	  this_ix(ix++)
 	//, speedGoal(0)
 	 {SetContinuous();

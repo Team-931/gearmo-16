@@ -22,9 +22,9 @@ OI::OI() : driveStick(1), elevStick(2),
 # if ! newdrivestick
   speeder.WhenPressed(new ::SpeedToggle);
 # endif
-  elevUp.WhenPressed(new ::MoveElevatorTo(elevLevels[incLevel()]));
-  elevDown.WhenPressed(new ::MoveElevatorTo(elevLevels[decLevel()]));
-  elevStop.WhenPressed(new ::StopElev);
+//  elevUp.WhenPressed(new ::MoveElevatorTo(elevLevels[incLevel()]));
+//  elevDown.WhenPressed(new ::MoveElevatorTo(elevLevels[decLevel()]));
+//  elevStop.WhenPressed(new ::StopElev);
 }
 
 size_t incLevel()
