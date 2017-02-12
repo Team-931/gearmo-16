@@ -6,16 +6,15 @@
 class OI
 {
 private:
-  Joystick driveStick, elevStick;
+  Joystick driveStick, operatorStick;
   JoystickButton straightenup,
 # if ! usingnewstick
-  speeder,
+  speeder
 # endif
-   elevUp, elevDown,
-   elevStop;
+;
 public:
 	OI();
-	Joystick & DriveStick(), &ElevStick();
+	Joystick & DriveStick(), &OperatorStick();
 	JoystickButton & Straightenup();
 # if ! usingnewstick
 	JoystickButton & Speeder();
@@ -25,8 +24,8 @@ public:
 inline Joystick & OI::DriveStick()
  {return driveStick;}
 
-inline Joystick & OI::ElevStick()
- {return elevStick;}
+inline Joystick & OI::OperatorStick()
+ {return operatorStick;}
 
 inline JoystickButton & OI::Straightenup()
  {return straightenup;}

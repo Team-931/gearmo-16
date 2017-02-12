@@ -18,8 +18,8 @@ void SwerveDrive::InitDefaultCommand()
 // These should each be {y, -x}
 // where (x, y) is the vector of
 // this wheel from the center of rotation.
-static const float length = 24.203125; // TODO: check measure
-static const float width  = 21.25; //   "       "
+static const float length = 24.25; // TODO: check measure
+static const float width  = 27.875; //   "       "
 static const float rot_scale = 1/sqrt(length*length + width*width);
 static const float rot_length = length * rot_scale;
 static const float rot_width  = width  * rot_scale;
@@ -65,7 +65,7 @@ void SwerveDrive::Drive(float x, float y, float rot, float throttle, bool align)
    max = std::max(max, abs(vecs[n]));
   if (max < 1) max = 1;
   for (unsigned n=0; n<numWheels; ++n)
-	wheels[n].Drive(float(n==2?1:-1)*vecs[n] / max, align);
+	wheels[n].Drive((n==3?i:-i)*vecs[n] / max, align);
  }
 
 uint32_t SwerveDrive::Wheel::ix = 0;

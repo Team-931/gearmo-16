@@ -2,7 +2,7 @@
 #define COMMAND_BASE_H
 
 #include "Subsystems/SwerveDrive.h"
-#include "Subsystems/Elevator.h"
+#include "Subsystems/Shooter.h"
 #include <string>
 #include "Commands/Command.h"
 #include "OI.h"
@@ -21,8 +21,9 @@ public:
 	static void init(RobotBase *);
 	// Create a single static instance of all of your subsystems
 	static RobotBase *robot;
-	static Elevator *elevator;
+	//static Elevator *elevator;
 	static SwerveDrive *swerveDrive;
+	static Shooter * shooter;
 	static OI *oi;
 };
 

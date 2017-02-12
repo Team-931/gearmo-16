@@ -5,7 +5,8 @@
 // Initialize a single static instance of all of your subsystems to NULL
 RobotBase * CommandBase::robot = 0;
 SwerveDrive* CommandBase::swerveDrive = NULL;
-Elevator* CommandBase::elevator = NULL;
+Shooter * CommandBase::shooter = 0;
+//Elevator* CommandBase::elevator = NULL;
 OI* CommandBase::oi = NULL;
 
 CommandBase::CommandBase(char const *name) :
@@ -30,6 +31,7 @@ void CommandBase::init(RobotBase *robo)
 	// line should be repeated for each subsystem in the project.
 	robot = robo;
 	swerveDrive = new SwerveDrive();
+	shooter = new Shooter();
 	//elevator = new Elevator();
 	SmartDashboard::PutData(swerveDrive);
 	SmartDashboard::PutData(new PIDAdjust);
