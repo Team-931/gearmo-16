@@ -1,6 +1,6 @@
 #include "PIDAdjust.h"
 
-PIDAdjust::PIDAdjust()
+PIDAdjust::PIDAdjust() : CommandBase("Read Drive PID from dashboard")
 {Requires(swerveDrive);
 	// Use Requires() here to declare subsystem dependencies
 	// eg. Requires(chassis);

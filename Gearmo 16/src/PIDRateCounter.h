@@ -11,7 +11,7 @@
 class PIDRateCounter:public PIDSource,public Counter {
 public:
 	PIDRateCounter(int dio):Counter(dio){
-		SetPIDSourceType(PIDSourceType::kRate);
+		/*SetPIDSourceType(PIDSourceType::kRate);*/
 	}
 double PIDGet() override {
 	return 1/GetPeriod();

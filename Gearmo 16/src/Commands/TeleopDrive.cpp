@@ -1,6 +1,6 @@
 #include "TeleopDrive.h"
 
-TeleopDrive::TeleopDrive()
+TeleopDrive::TeleopDrive() : CommandBase("Drive with joystick")
 {
 	Requires(swerveDrive);
 }
@@ -15,7 +15,7 @@ const float minThrottle = .4;
 void TeleopDrive::Execute()
 {
   Joystick & joy = oi->DriveStick();
-  if (/*RobotBase::getInstance().*/robot->IsOperatorControl())
+  if (robot->IsOperatorControl())
     swerveDrive->Drive(joy.GetX(Joystick::kLeftHand),
 	joy.GetY(Joystick::kLeftHand),
 # if newdrivestick

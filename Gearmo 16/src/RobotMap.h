@@ -10,9 +10,7 @@
  * floating around.
  */
 
-const float toteHeight = 12.1, // inches
- winchCorrection = 7.46, // xxx really? inches per rotation
- levelSize = toteHeight / winchCorrection;
+
 
  
 // For example to map the left and right motors, you could define the

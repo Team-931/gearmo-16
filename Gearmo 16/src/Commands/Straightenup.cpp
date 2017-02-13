@@ -1,6 +1,6 @@
 #include "Straightenup.h"
 
-Straightenup::Straightenup()
+Straightenup::Straightenup() : CommandBase("Align wheels without driving")
 {
 	// Use Requires() here to declare subsystem dependencies
 	// eg. Requires(chassis);

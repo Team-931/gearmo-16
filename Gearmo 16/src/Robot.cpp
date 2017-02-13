@@ -14,17 +14,17 @@ typedef autoPIH autoner;
 #include <opencv2/imgproc.hpp>
 #include <opencv2/calib3d.hpp>
 
-/*
- class LowerElev : public CommandBase
- {public:
- LowerElev() {Requires(elevator);}
- void Initialize() {elevator->SetTarget(-6);}
- void Execute() {}
- bool IsFinished() {return elevator->Limit().Get() == false;}
- void End() {}
- void Interrupted() {}
- } lowerElev;
- */
+namespace LaunchGeom
+{double goalHt = 8+1.0/12, //8 ft., 1 in.
+ shooterHt = 1,
+ exitAngle = 74,
+ exitSlope,
+ wheelDiam = 1.0/3;
+
+ void ReadIn() {}
+ void inline SetSlope() {exitSlope = tan(exitAngle);}
+}
+
 class Robot: public IterativeRobot {
 private:
 	//AnalogInput ultra;
@@ -47,6 +47,7 @@ private:
 		SmartDashboard::PutNumber("launch speed", 55);
 		SmartDashboard::PutNumber("minimum launcher speed", 10);
 		SmartDashboard::PutNumber("bubbler speed", .35);
+		CommandBase::shooter->WritePID();
 		lw = LiveWindow::GetInstance();
 	}
 
@@ -154,8 +155,11 @@ private:
 	void TeleopPeriodic() {
 		Scheduler::GetInstance()->Run();
 		CommandBase::shooter->RunShoot();
+
+		if(CommandBase::oi->OperatorStick().GetRawButton(9)) CommandBase::shooter->ReadPID();
+
 		bool latched = CommandBase::oi->OperatorStick().GetRawButton(6);
-		if (!latched)
+		if (latched)
 			CommandBase::shooter->SetSpd(
 					80 * CommandBase::oi->OperatorStick().GetRawAxis(1));
 		else if (CommandBase::oi->OperatorStick().GetRawButton(8))
