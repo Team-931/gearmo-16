@@ -7,6 +7,7 @@
 #include "Commands/Command.h"
 #include "OI.h"
 #include "WPILib.h"
+#include "Subsystems/BPM.h"
 /**
  * The base for all commands. All atomic commands should subclass CommandBase.
  * CommandBase stores creates and stores each control system. To access a
@@ -21,7 +22,7 @@ public:
 	static void init(RobotBase *);
 	// Create a single static instance of all of your subsystems
 	static RobotBase *robot;
-	//static Elevator *elevator;
+	static BPM *bpm;
 	static SwerveDrive *swerveDrive;
 	static Shooter * shooter;
 	static OI *oi;

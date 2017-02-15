@@ -8,6 +8,7 @@ SwerveDrive* CommandBase::swerveDrive = NULL;
 Shooter * CommandBase::shooter = 0;
 //Elevator* CommandBase::elevator = NULL;
 OI* CommandBase::oi = NULL;
+BPM *CommandBase::bpm = 0;
 
 CommandBase::CommandBase(char const *name) :
 		Command(name)
@@ -31,13 +32,14 @@ void CommandBase::init(RobotBase *robo)
 	// line should be repeated for each subsystem in the project.
 	robot = robo;
 	swerveDrive = new SwerveDrive();
-	shooter = new Shooter();
-	//elevator = new Elevator();
 	SmartDashboard::PutData(swerveDrive);
 	SmartDashboard::PutData(new PIDAdjust);
+	shooter = new Shooter();
+	SmartDashboard::PutData(shooter);
 //	SmartDashboard::PutNumber("Drive P", .125);
 //	SmartDashboard::PutNumber("Drive I", 0);
 //	SmartDashboard::PutNumber("Drive D", 0);
 //	SmartDashboard::PutData(elevator);
 	oi = new OI();
+	bpm = new BPM();
 }

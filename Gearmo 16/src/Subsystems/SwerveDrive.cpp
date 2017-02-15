@@ -99,6 +99,6 @@ void SwerveDrive::SetPID(float P, float I, float D)
  {for(unsigned n = 0; n < numWheels; ++n)
    wheels[n].SetPID(P, I, D);
  }
-// Put methods for controlling this subsystem
-// here. Call these from Commands.
 
+inline float SwerveDrive::YawCompens()
+	{return shouldYawCompens ? 0 : 0;}

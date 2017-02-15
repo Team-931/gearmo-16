@@ -65,7 +65,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="src/Subsystems/Elevator.cpp|src/Commands/WinchReset.cpp|src/Commands/MoveElevator.cpp|src/Commands/autoPIH.cpp|src/Commands/autoner.cpp|src/Subsystems/ExampleSubsystem.cpp|src/Commands/ExampleCommand.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="src/PWMInput.cpp|src/RotationCtr.cpp|src/Subsystems/Elevator.cpp|src/Commands/WinchReset.cpp|src/Commands/MoveElevator.cpp|src/Commands/autoPIH.cpp|src/Commands/autoner.cpp|src/Subsystems/ExampleSubsystem.cpp|src/Commands/ExampleCommand.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>

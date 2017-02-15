@@ -1,17 +1,19 @@
 #include "Shooter.h"
 #include "../RobotMap.h"
 
-Shooter::Shooter() : Subsystem("ExampleSubsystem"),
+Shooter::Shooter() : Subsystem("Fuel Shooter"),
 	launcher(9),
 	bubbler(10),
 	launchSpd(0),
 	bubbleSpd(0),
-	houston(.03,0,0,&launchSpd,&launcher),
-	nomSpd(10)
+	nomSpd(10),
+	houston(.125, 0, 0 ,&launchSpd,&launcher)
 {
 	houston.SetOutputRange(0, 1); //the sensor cannot tell forward from backward,
 									//so we require output always forward.
+	houston.Enable();
 	houston.SetAbsoluteTolerance(1);
+	houston.SetToleranceBuffer(8);
 }
 
 void Shooter::InitDefaultCommand() {
@@ -25,7 +27,6 @@ void Shooter::InitDefaultCommand() {
 void Shooter::SetSpd(float spd) {
 	if(spd < 0) spd = 0;// the shooter may not reverse.
 						//see note in the constructor.
-	houston.Enable();
 	houston.SetSetpoint(spd);
 }
 
@@ -33,7 +34,9 @@ void Shooter::AddSpd(float diff) {
 	SetSpd(houston.GetSetpoint() + diff); //because targetSpd is negative
 }
 void Shooter::RunShoot() {
-	bool bubblerOn = (houston.GetSetpoint()>=nomSpd&&houston.OnTarget());
+	static bool bubblerOn;
+	bubblerOn = (houston.GetSetpoint() >= nomSpd) &&
+			(bubblerOn || houston.OnTarget());
 	bubbler.Set(bubblerOn*bubbleSpd);
 }
 
@@ -42,7 +45,7 @@ float Shooter::GetSpd() {
 }
 
 void Shooter::ReadLaunchSpd() {
-	SetSpd(SmartDashboard::GetNumber("launch speed", 15));
+	SetSpd(SmartDashboard::GetNumber("launch speed", 55));
 }
 
 void Shooter::ReloadParams() {
@@ -51,13 +54,20 @@ void Shooter::ReloadParams() {
 }
 
 void Shooter::WritePID() {
-	SmartDashboard::PutNumber("Shooter P", houston.GetP());
-	SmartDashboard::PutNumber("Shooter I", houston.GetI());
-	SmartDashboard::PutNumber("Shooter D", houston.GetD());
+	SmartDashboard::PutNumber("Shooter P",
+			SmartDashboard::GetNumber("Shooter P", houston.GetP()));
+	SmartDashboard::PutNumber("Shooter I",
+			SmartDashboard::GetNumber("Shooter I", houston.GetI()));
+	SmartDashboard::PutNumber("Shooter D",
+			SmartDashboard::GetNumber("Shooter D", houston.GetD()));
+	SmartDashboard::PutNumber("Shooter tolerance",
+			SmartDashboard::GetNumber("Shooter tolerance", 1));
 }
 
 void Shooter::ReadPID() {
 	houston.SetPID(	SmartDashboard::GetNumber("Shooter P", houston.GetP()),
 					SmartDashboard::GetNumber("Shooter I", houston.GetI()),
 					SmartDashboard::GetNumber("Shooter D", houston.GetD()));
+	houston.SetAbsoluteTolerance(
+			SmartDashboard::GetNumber("Shooter tolerance", 1));
 }

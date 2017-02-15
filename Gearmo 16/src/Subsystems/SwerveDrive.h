@@ -15,6 +15,8 @@ static const unsigned numWheels=4;
 class SwerveDrive: public Subsystem
 {
 private:
+	// set if headings are accelerometer compensated
+	bool shouldYawCompens = false;
 # if ! newdrivestick
   bool speedface;
 # endif
@@ -66,6 +68,8 @@ private:
 public:
 	SwerveDrive();
 	void InitDefaultCommand();
+	// Transmit yaw information when needed
+	float YawCompens();
 /** @param leftright motion **/
 	void Drive(float x, float y, float twist,
 	  float throttle, bool=false);

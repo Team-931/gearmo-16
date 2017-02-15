@@ -19,8 +19,8 @@ void PIDAdjust::Execute()
 {
   swerveDrive->SetPID(
 	SmartDashboard::GetNumber("Drive P",1.0),
-	SmartDashboard::GetNumber("Drive I",1.0),
-	SmartDashboard::GetNumber("Drive D",1.0));
+	SmartDashboard::GetNumber("Drive I",0),
+	SmartDashboard::GetNumber("Drive D",0));
 }
 
 // Make this return true when this Command no longer needs to run execute()
