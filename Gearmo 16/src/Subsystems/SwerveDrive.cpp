@@ -3,7 +3,7 @@
 # include <cfenv> // for FE_DIVBYZERO
 
 SwerveDrive::SwerveDrive() :
-		Subsystem("SwerveDrive")
+		Subsystem("SwerveDrive"), iDrone(14), iSensor(&iDrone)
 # if ! newdrivestick
 ,		speedface(false)
 # endif
@@ -23,7 +23,7 @@ static const float width  = 27.875; //   "       "
 static const float rot_scale = 1/sqrt(length*length + width*width);
 static const float rot_length = length * rot_scale;
 static const float rot_width  = width  * rot_scale;
-static const complex i = {0,1};
+// In general, the wheel positions, scaled so the largest norm == 1
 static const complex rot_vecs[numWheels] =
   { {-rot_width,  rot_length},{ rot_width,  rot_length},
 	{ rot_width, -rot_length},{-rot_width, -rot_length}};
@@ -64,29 +64,11 @@ void SwerveDrive::Drive(float x, float y, float rot, float throttle, bool align)
   for (unsigned n=0; n<numWheels; ++n)
    max = std::max(max, abs(vecs[n]));
   if (max < 1) max = 1;
+//  for(unsigned i = 0; i < numWheels; ++i) wheels[i].Disable();
+//  correction = -Orientation;
   for (unsigned n=0; n<numWheels; ++n)
-	wheels[n].Drive((n==3?i:-i)*vecs[n] / max, align);
- }
-
-uint32_t SwerveDrive::Wheel::ix = 0;
-
-void SwerveDrive::Wheel::Drive(complex vec, bool align)
- {speedGoal = align?0: vec;
-  SetSetpoint((.5 + atan(imag(vec)/real(vec)) / pi) * maxRot);}
-
-// I'm using this to do other responses to
-// encoder.PIDGet() before handing it to Calculate.
-double SwerveDrive::Wheel::PIDGet()
- {double val = encoder.PIDGet();
- SmartDashboard::PutNumber(wheelnames[this_ix], GetAngle());
- // This could be used more effectively
-  complex rot_vec = speedGoal *
-	exp(complex(0,-GetAngle()));
-  // XXX: maybe have a ramp-up and/or conditional on this
-  drvSpeed.Set(imag(rot_vec));
-  while (val > maxRot) val -= maxRot;
-  while (val < 0) val += maxRot;
-    return val;
+	wheels[n].Drive(float(n==3?1:-1) * Orienter * vecs[n] / max, align);
+//  for(unsigned i = 0; i < numWheels; ++i) wheels[i].Enable();
  }
 
 bool SwerveDrive::OnTarget()
@@ -100,5 +82,46 @@ void SwerveDrive::SetPID(float P, float I, float D)
    wheels[n].SetPID(P, I, D);
  }
 
+void SwerveDrive::SetPerson(float dir, bool Third)
+	{for(unsigned i = 0; i < numWheels; ++i) wheels[i].Disable();
+	 Orientation = dir;
+	 Orienter = i * std::exp(i*dir);
+	 if(Third != ThirdPerson)
+		 {correction += (Third ? -1 : 1) * iSensor.GetFusedHeading()/360;
+		  ThirdPerson = Third;
+		  SmartDashboard::PutBoolean("Third person is ", Third);}
+	 for(unsigned i = 0; i < numWheels; ++i) wheels[i].Enable();}
+
 inline float SwerveDrive::YawCompens()
-	{return shouldYawCompens ? 0 : 0;}
+	{return (ThirdPerson ? iSensor.GetFusedHeading()/360 : 0) + correction;}
+
+uint32_t SwerveDrive::Wheel::ix = 0;
+
+SwerveDrive::Wheel::Wheel(): PIDController(2/maxRot, 0, 0, this,&rotSpeed),
+	  encoder(ix),
+	  rotSpeed(ix + 1),drvSpeed(numWheels + ix + 1),
+	  this_ix(ix++)
+	//, speedGoal(0)
+	 {SetContinuous();
+	  SetInputRange(0, maxRot);
+	  SetPercentTolerance((float)100/32);
+	  Enable();}
+
+void SwerveDrive::Wheel::Drive(complex vec, bool align)
+ {speedGoal = align?0: vec;
+  SetSetpoint((.5 + atan(imag(vec)/real(vec)) / pi) * maxRot);}
+
+// I'm using this to do other responses to
+// encoder.PIDGet() before handing it to Calculate.
+double SwerveDrive::Wheel::PIDGet()
+ {double val = encoder.PIDGet() - CommandBase::swerveDrive->YawCompens();
+ SmartDashboard::PutNumber(wheelnames[this_ix], GetAngle());
+ // This could be used more effectively
+  complex rot_vec = speedGoal *
+	exp(complex(0,-GetAngle()));
+  // XXX: maybe have a ramp-up and/or conditional on this
+  drvSpeed.Set(imag(rot_vec));
+  while (val > maxRot) val -= maxRot;
+  while (val < 0) val += maxRot;
+    return val;
+ }

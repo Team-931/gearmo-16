@@ -35,7 +35,7 @@ void Shooter::AddSpd(float diff) {
 }
 void Shooter::RunShoot() {
 	static bool bubblerOn;
-	bubblerOn = (houston.GetSetpoint() >= nomSpd) &&
+	bubblerOn = (/*houston.GetSetpoint() */ GetSpd() >= nomSpd) &&
 			(bubblerOn || houston.OnTarget());
 	bubbler.Set(bubblerOn*bubbleSpd);
 }

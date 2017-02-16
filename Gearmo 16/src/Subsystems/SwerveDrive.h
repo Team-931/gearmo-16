@@ -2,24 +2,31 @@
 #define SWERVE_DRIVE_H
 
 #include "Commands/Subsystem.h"
-#include "WPILib.h"
-#include "complex"
-#include "CANTalon.h"
+#include <WPILib.h>
+#include <complex>
+#include <CANTalon.h>
+#include <PigeonImu.h>
 # define newdrivestick 1
 //#include "CommandBase.h"
 # define OldEncoder 0
 typedef std::complex<float> complex;
 
 static const unsigned numWheels=4;
+constexpr complex i = {0,1};
 
 class SwerveDrive: public Subsystem
-{
-private:
-	// set if headings are accelerometer compensated
-	bool shouldYawCompens = false;
+{CANTalon iDrone;
+ PigeonImu iSensor;
+ 	// set if headings are accelerometer compensated
+	bool ThirdPerson = false;
+	float Orientation = 0,
+			correction = 0;
+	complex Orienter = i;
 # if ! newdrivestick
   bool speedface;
 # endif
+	// Transmit yaw information when needed
+	float YawCompens();
   // Wheel is a private member class, since we don't
 	// expect any more to be created than these.
   class Wheel: public PIDController, public PIDSource
@@ -42,7 +49,7 @@ private:
 	 // The encoder output is wrapped at 206.75 by PIDGet -CHECK NUMBER!
    static constexpr double pi = M_PI /*3.14159265*/;
    static constexpr double piRatio = pi/maxRot;
-   double GetAngle(){return piRatio*encoder.
+   double GetAngle() const {return piRatio*encoder.
 # if OldEncoder
 	 GetDistance();
 # else
@@ -50,15 +57,7 @@ private:
 # endif
    }
 	public:
-   Wheel(): PIDController(2/maxRot, 0, 0, this,&rotSpeed),
-	  encoder(ix),
-	  rotSpeed(ix + 1),drvSpeed(numWheels + ix + 1),
-	  this_ix(ix++)
-	//, speedGoal(0)
-	 {SetContinuous();
-	  SetInputRange(0, maxRot);
-	  SetPercentTolerance((float)100/32);
-	  Enable();}
+   Wheel();
    void Drive(complex, bool);
    //void SetSpeedGoal(float);
    void InitDefaultCommand();
@@ -68,8 +67,6 @@ private:
 public:
 	SwerveDrive();
 	void InitDefaultCommand();
-	// Transmit yaw information when needed
-	float YawCompens();
 /** @param leftright motion **/
 	void Drive(float x, float y, float twist,
 	  float throttle, bool=false);
@@ -77,14 +74,42 @@ public:
 # if ! newdrivestick
 	void Toggler();
 # endif
-	float GetP(), GetI(), GetD();
+// get PID parameters for the wheels
+	float GetP() const, GetI() const, GetD() const;
+// set PID parameters for the wheels
 	void SetPID(float, float, float);
+
+// is the orientation unchanged when the robot rotates?
+	inline bool IsThirdPerson() const;
+//does Set{First|Third}Person(orientation)
+	void SetPerson(float orientation, bool isThird);
+// "forward" is (360*orientation) degrees from the robot's initial orientation
+	inline void SetThirdPerson(float orientation);
+// "forward" is (360*orientation) degrees from the robot's current orientation
+	inline void SetFirstPerson(float orientation);
+// Set initial orientation
+	inline void ZeroOrientation();
+	static constexpr float GearForward = 1.0/4,
+			PickUpForward = 0,
+			ShooterForward = 1.0/2;
 };
 
 # if ! newdrivestick
 inline void SwerveDrive::Toggler(){speedface=!speedface;}
 # endif
-inline float SwerveDrive::GetP(){return wheels[0].GetP();}
-inline float SwerveDrive::GetI(){return wheels[0].GetI();}
-inline float SwerveDrive::GetD(){return wheels[0].GetD();}
-#endif
+inline float SwerveDrive::GetP() const{return wheels[0].GetP();}
+inline float SwerveDrive::GetI() const{return wheels[0].GetI();}
+inline float SwerveDrive::GetD() const{return wheels[0].GetD();}
+
+inline bool SwerveDrive::IsThirdPerson() const
+	{return ThirdPerson;}
+
+inline void SwerveDrive::SetFirstPerson(float dir)
+	{SetPerson(dir, false);}
+
+inline void SwerveDrive::SetThirdPerson(float dir)
+	{SetPerson(dir, true);}
+
+inline void SwerveDrive::ZeroOrientation()
+	{iSensor.SetFusedHeading(0);}
+#endif // reinclusion guard

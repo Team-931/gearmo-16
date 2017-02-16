@@ -1,6 +1,7 @@
 #include "OI.h"
 #include "robotmap.h"
 #include "Commands/Straightenup.h"
+#include "Commands/GearForward.h"
 OI::OI() : driveStick(1), operatorStick(0),
   straightenup(&driveStick, 6),
 # if ! usingnewstick
@@ -14,4 +15,5 @@ OI::OI() : driveStick(1), operatorStick(0),
 # if ! newdrivestick
   speeder.WhenPressed(new ::SpeedToggle);
 # endif
+  SmartDashboard::PutData(new GearForward);
 }

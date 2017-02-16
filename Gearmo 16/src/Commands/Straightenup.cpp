@@ -17,7 +17,7 @@ void Straightenup::Initialize()
 // Called repeatedly when this Command is scheduled to run
 void Straightenup::Execute()
 {
-  swerveDrive->Drive(0,1,0,true);
+  swerveDrive->Drive(0,1,0,1,true);
 }
 
 // Make this return true when this Command no longer needs to run execute()

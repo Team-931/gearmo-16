@@ -1,6 +1,8 @@
 #include "CommandBase.h"
-#include "Commands/Scheduler.h"
+#include <Commands/Scheduler.h>
 #include "Commands/PIDAdjust.h"
+#include "Commands/ToggleThirdPerson.h"
+#include "Commands/PickUp.h"
 
 // Initialize a single static instance of all of your subsystems to NULL
 RobotBase * CommandBase::robot = 0;
@@ -31,15 +33,22 @@ void CommandBase::init(RobotBase *robo)
 	// Create a single static instance of all of your subsystems. The following
 	// line should be repeated for each subsystem in the project.
 	robot = robo;
+
 	swerveDrive = new SwerveDrive();
 	SmartDashboard::PutData(swerveDrive);
 	SmartDashboard::PutData(new PIDAdjust);
-	shooter = new Shooter();
-	SmartDashboard::PutData(shooter);
+	SmartDashboard::PutData(new ToggleThirdPerson);
+	swerveDrive->ZeroOrientation();
 //	SmartDashboard::PutNumber("Drive P", .125);
 //	SmartDashboard::PutNumber("Drive I", 0);
 //	SmartDashboard::PutNumber("Drive D", 0);
-//	SmartDashboard::PutData(elevator);
+
+	shooter = new Shooter();
+	SmartDashboard::PutData(shooter);
+
 	oi = new OI();
+
 	bpm = new BPM();
+	SmartDashboard::PutData(bpm);
+	SmartDashboard::PutData(new PickUp(true));
 }
