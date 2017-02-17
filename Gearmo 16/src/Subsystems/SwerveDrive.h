@@ -13,7 +13,7 @@ typedef std::complex<float> complex;
 
 static const unsigned numWheels=4;
 constexpr complex i = {0,1};
-
+static constexpr float minimal = 1.0/1024;
 class SwerveDrive: public Subsystem
 {CANTalon iDrone;
  PigeonImu iSensor;
@@ -21,12 +21,12 @@ class SwerveDrive: public Subsystem
 	bool ThirdPerson = false;
 	float Orientation = 0,
 			correction = 0;
-	complex Orienter = i;
+	complex Orienter = i,
+			velocity = minimal;
+	float rotSpeed = 0;
 # if ! newdrivestick
   bool speedface;
 # endif
-	// Transmit yaw information when needed
-	float YawCompens();
   // Wheel is a private member class, since we don't
 	// expect any more to be created than these.
   class Wheel: public PIDController, public PIDSource
@@ -37,7 +37,6 @@ class SwerveDrive: public Subsystem
    AnalogInput encoder;
 # endif
    CANTalon rotSpeed, drvSpeed; /*the motors are cims and pg (34?) .*/
-   complex speedGoal;
    static uint32_t ix;
    uint32_t this_ix;
    static constexpr double maxRot =
@@ -58,7 +57,7 @@ class SwerveDrive: public Subsystem
    }
 	public:
    Wheel();
-   void Drive(complex, bool);
+   //void Drive(complex, bool);
    //void SetSpeedGoal(float);
    void InitDefaultCommand();
     protected:
@@ -74,7 +73,9 @@ public:
 # if ! newdrivestick
 	void Toggler();
 # endif
-// get PID parameters for the wheels
+// send velocity vector for "n"th wheel
+	complex GetWheelVector(int ix);
+	// get PID parameters for the wheels
 	float GetP() const, GetI() const, GetD() const;
 // set PID parameters for the wheels
 	void SetPID(float, float, float);
