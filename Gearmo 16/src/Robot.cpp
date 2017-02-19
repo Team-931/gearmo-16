@@ -69,7 +69,7 @@ private:
 		if (!autonomousCommand) autonomousCommand = new PickUp(true);
 		if (autonomousCommand != NULL)
 			autonomousCommand->Start();
-//		CommandBase::shooter->ReloadParams();
+		CommandBase::shooter->ReloadParams();
 	}
 
 	void AutonomousPeriodic() {
@@ -84,16 +84,17 @@ private:
 		// this line or comment it out.
 		if (autonomousCommand != NULL)
 			autonomousCommand->Cancel();
-//		CommandBase::shooter->ReloadParams();
+		(new POV())->Start();
+		CommandBase::shooter->ReloadParams();
 	}
 
 	void TeleopPeriodic() {
 		Scheduler::GetInstance()->Run();
 /*
 		CommandBase::shooter->RunShoot();
-
+*/
 		if(CommandBase::oi->OperatorStick().GetRawButton(9)) CommandBase::shooter->ReadPID();
-
+/*
 		bool latched = CommandBase::oi->OperatorStick().GetRawButton(6);
 		if (latched)
 			CommandBase::shooter->SetSpd(
@@ -104,10 +105,9 @@ private:
 			CommandBase::shooter->AddSpd(
 					2 * (CommandBase::oi->OperatorStick().GetRawButton(5)
 						- CommandBase::oi->OperatorStick().GetRawButton(7)));
-*/
-		new POV();
 
-//		SmartDashboard::PutNumber("launchspd", CommandBase::shooter->GetSpd());
+		SmartDashboard::PutNumber("launchspd", CommandBase::shooter->GetSpd());
+*/
 	}
 
 	void TestPeriodic() {

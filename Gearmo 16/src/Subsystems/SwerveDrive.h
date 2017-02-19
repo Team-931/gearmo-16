@@ -18,12 +18,13 @@ class SwerveDrive: public Subsystem
 {CANTalon iDrone;
  PigeonImu iSensor;
  	// set if headings are accelerometer compensated
-	bool ThirdPerson = false;
+	bool ThirdPerson = false,
+			AngleSetting = false;
 	float Orientation = 0,
 			correction = 0;
 	complex Orienter = i,
 			velocity = minimal;
-	float rotSpeed = 0;
+	float rotSpeed = 0; //also the target angle
 # if ! newdrivestick
   bool speedface;
 # endif
@@ -96,6 +97,8 @@ public:
 	inline void SetFirstPerson(float orientation);
 // Set initial orientation
 	inline void ZeroOrientation();
+	void RotateTo(float degrees);
+	void RotateBy(float degrees);
 	static constexpr float GearForward = 1.0/4,
 			PickUpForward = 0,
 			ShooterForward = 1.0/2;
