@@ -118,7 +118,7 @@ inline void SwerveDrive::SetThirdPerson(float dir)
 	{SetPerson(dir, true);}
 
 inline void SwerveDrive::ClickOrient() {
-	Orienter /= i;
+	Orienter *= i;
 }
 
 inline void SwerveDrive::ZeroOrientation()

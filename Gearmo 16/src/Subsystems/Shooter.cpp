@@ -1,13 +1,14 @@
 #include "Shooter.h"
 #include "../RobotMap.h"
-
+#include "Commands/StopShooter.h"
+static constexpr double P = .11, I = .011, D = .005;
 Shooter::Shooter() : Subsystem("Fuel Shooter"),
 	launcher(9),
 	bubbler(10),
 	launchSpd(0),
 	bubbleSpd(0),
 	nomSpd(10),
-	houston(.125, 0, 0 ,&launchSpd,&launcher)
+	houston(P, I, D ,&launchSpd,&launcher)
 {
 	houston.SetOutputRange(0, 1); //the sensor cannot tell forward from backward,
 									//so we require output always forward.
@@ -18,7 +19,7 @@ Shooter::Shooter() : Subsystem("Fuel Shooter"),
 
 void Shooter::InitDefaultCommand() {
 	// Set the default command for a subsystem here.
-	// SetDefaultCommand(new MySpecialCommand());
+	SetDefaultCommand(new StopShooter());
 }
 
 // Put methods for controlling this subsystem
@@ -38,6 +39,7 @@ void Shooter::RunShoot() {
 	bubblerOn = (/*houston.GetSetpoint() */ GetSpd() >= nomSpd) &&
 			(bubblerOn || houston.OnTarget());
 	bubbler.Set(bubblerOn*bubbleSpd);
+	SmartDashboard::PutNumber("launchspd", CommandBase::shooter->GetSpd());
 }
 
 float Shooter::GetSpd() {

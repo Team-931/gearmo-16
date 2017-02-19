@@ -9,6 +9,7 @@ typedef autoPIH autoner;
 #include "Commands/autoner.h"
 # endif
 #include "CommandBase.h"
+//#include "Subsystems/Winch.h"
 #include "Commands/POV.h"
 
 void VisionThread();
@@ -48,15 +49,17 @@ private:
 		//autoChooser.AddObject("totebinramp", new autonerbot(3.25)/*new Auto4*/);
 		//autoChooser.AddDefault("nothing",0);
 		//SmartDashboard::PutData("Which autonomous?", &autoChooser);
+/*
 		SmartDashboard::PutNumber("launch speed", 55);
 		SmartDashboard::PutNumber("minimum launcher speed", 10);
 		SmartDashboard::PutNumber("bubbler speed", .35);
 		CommandBase::shooter->WritePID();
+*/
 		lw = LiveWindow::GetInstance();
 	}
 
 	void DisabledInit() override
-			{CommandBase::shooter->SetSpd(0);}
+			{/*CommandBase::shooter->SetSpd(0);*/}
 	void DisabledPeriodic() override {
 		Scheduler::GetInstance()->Run();
 	}
@@ -66,12 +69,12 @@ private:
 		if (!autonomousCommand) autonomousCommand = new PickUp(true);
 		if (autonomousCommand != NULL)
 			autonomousCommand->Start();
-		CommandBase::shooter->ReloadParams();
+//		CommandBase::shooter->ReloadParams();
 	}
 
 	void AutonomousPeriodic() {
 		Scheduler::GetInstance()->Run();
-		CommandBase::shooter->RunShoot();
+//		CommandBase::shooter->RunShoot();
 	}
 
 	void TeleopInit() {
@@ -81,11 +84,12 @@ private:
 		// this line or comment it out.
 		if (autonomousCommand != NULL)
 			autonomousCommand->Cancel();
-		CommandBase::shooter->ReloadParams();
+//		CommandBase::shooter->ReloadParams();
 	}
 
 	void TeleopPeriodic() {
 		Scheduler::GetInstance()->Run();
+/*
 		CommandBase::shooter->RunShoot();
 
 		if(CommandBase::oi->OperatorStick().GetRawButton(9)) CommandBase::shooter->ReadPID();
@@ -100,10 +104,10 @@ private:
 			CommandBase::shooter->AddSpd(
 					2 * (CommandBase::oi->OperatorStick().GetRawButton(5)
 						- CommandBase::oi->OperatorStick().GetRawButton(7)));
-
+*/
 		new POV();
 
-		SmartDashboard::PutNumber("launchspd", CommandBase::shooter->GetSpd());
+//		SmartDashboard::PutNumber("launchspd", CommandBase::shooter->GetSpd());
 	}
 
 	void TestPeriodic() {

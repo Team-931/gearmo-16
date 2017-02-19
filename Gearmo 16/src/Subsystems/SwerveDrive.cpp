@@ -7,7 +7,8 @@ SwerveDrive::SwerveDrive() :
 # if ! newdrivestick
 ,		speedface(false)
 # endif
-{fedisableexcept (FE_DIVBYZERO);}
+{fedisableexcept (FE_DIVBYZERO);
+ZeroOrientation();}
 
 void SwerveDrive::InitDefaultCommand()
 {
@@ -63,6 +64,7 @@ void SwerveDrive::Drive(float x, float y, float rot)
  if(max > 1) straight /= max, rot /= max;//XXX
  velocity = straight * Orienter;
  rotSpeed = rot;
+ AngleSetting = false;
 /*
  for (unsigned n=0; n<numWheels; ++n)
    {vecs[n] = straight + i* rot * rot_vecs[n];
@@ -80,6 +82,13 @@ void SwerveDrive::Drive(float x, float y, float rot)
 //  for(unsigned i = 0; i < numWheels; ++i) wheels[i].Enable();
  }
 
+void SwerveDrive::RotateTo(float degrees)
+	{rotSpeed = degrees;
+	AngleSetting = true;}
+
+void SwerveDrive::RotateBy(float degrees)
+{RotateTo(degrees + iSensor.GetFusedHeading());}
+
 bool SwerveDrive::OnTarget()
  {for(unsigned n = 0; n < numWheels; ++n)
    if(!wheels[n].OnTarget()) return false;
@@ -96,7 +105,7 @@ void SwerveDrive::SetPerson(float dir, bool Third)
 	 Orientation = dir;
 	 Orienter = i * expi(dir);
 	 if(Third != ThirdPerson)
-		 {velocity *= expi((Third ? -1 : 1) * iSensor.GetFusedHeading() * M_PI/180);
+		 {velocity *= expi((Third ? 1 : -1) * iSensor.GetFusedHeading() * M_PI/180);
 		  ThirdPerson = Third;
 		  SmartDashboard::PutBoolean("Third person is ", Third);}
 	 for(unsigned i = 0; i < numWheels; ++i) wheels[i].Enable();}
@@ -125,11 +134,18 @@ void SwerveDrive::Wheel::Drive(complex vec, bool align)
   SetSetpoint((.5 + atan(imag(vec)/real(vec)) / pi) * maxRot);}
 */
 
+static float P = 1, powerCap = 1;
+
 complex SwerveDrive::GetWheelVector(int ix)
 	{complex retval(velocity);
+	 float heading = iSensor.GetFusedHeading();
 	 if(ThirdPerson)
-		 retval *= expi(-iSensor.GetFusedHeading()*M_PI/180);
-	 return  retval - rotSpeed*rot_vecs[ix];}
+		 retval *= expi(-heading*M_PI/180);
+	 float rot = rotSpeed;
+	 if(AngleSetting)
+	 	 {float diff = rotSpeed - heading, rotCap = powerCap - abs(velocity);
+	 	 rot = std::max(std::min(diff * P, -rotCap), rotCap);}
+	 return  retval - rot*rot_vecs[ix];}
 
 // I'm using this to do other responses to
 // encoder.PIDGet() before handing it to Calculate.
