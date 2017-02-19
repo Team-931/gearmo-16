@@ -11,6 +11,7 @@ Shooter * CommandBase::shooter = 0;
 //Elevator* CommandBase::elevator = NULL;
 OI* CommandBase::oi = NULL;
 BPM *CommandBase::bpm = 0;
+Winch *CommandBase::winch = 0;
 
 CommandBase::CommandBase(char const *name) :
 		Command(name)
@@ -51,4 +52,6 @@ void CommandBase::init(RobotBase *robo)
 	bpm = new BPM();
 	SmartDashboard::PutData(bpm);
 	SmartDashboard::PutData(new PickUp(true));
+
+	winch = new Winch();
 }

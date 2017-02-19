@@ -9,6 +9,7 @@ typedef autoPIH autoner;
 #include "Commands/autoner.h"
 # endif
 #include "CommandBase.h"
+#include "Commands/POV.h"
 
 void VisionThread();
 
@@ -68,7 +69,7 @@ private:
 		CommandBase::shooter->ReloadParams();
 	}
 
-	void AutonomousPeriodic() {	//SmartDashboard::PutNumber("elev on target", CommandBase::elevator->OnTarget());
+	void AutonomousPeriodic() {
 		Scheduler::GetInstance()->Run();
 		CommandBase::shooter->RunShoot();
 	}
@@ -99,6 +100,8 @@ private:
 			CommandBase::shooter->AddSpd(
 					2 * (CommandBase::oi->OperatorStick().GetRawButton(5)
 						- CommandBase::oi->OperatorStick().GetRawButton(7)));
+
+		new POV();
 
 		SmartDashboard::PutNumber("launchspd", CommandBase::shooter->GetSpd());
 	}

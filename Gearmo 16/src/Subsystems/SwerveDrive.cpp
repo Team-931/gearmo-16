@@ -39,19 +39,21 @@ static float sloper(float rotx){
 }
 # endif
 
-void SwerveDrive::Drive(float x, float y, float rot, float throttle, bool align)
+void SwerveDrive::Drive(float x, float y, float rot, float throttle)
+ {Drive(x*throttle, y*throttle, rot*throttle);}
+void SwerveDrive::Drive(float x, float y, float rot, Align)
+ {Drive(x, y, rot, minimal);}
+void SwerveDrive::Drive(float x, float y, float rot)
  {/*SmartDashboard::PutNumber("SwerveDrive.Drive x:", x);
   SmartDashboard::PutNumber("SwerveDrive.Drive y:", y);
   SmartDashboard::PutNumber("SwerveDrive.Drive rot:", rot);
   SmartDashboard::PutNumber("SwerveDrive.Drive align:", align);
   SmartDashboard::PutBoolean("SwerveDrive.Toggle stat", speedface);*/
   complex straight(-x,y)/*, vecs[numWheels]*/;
-  if(align) throttle = 1.0/256;
    //straight *= norm(straight); // makes small motions smaller
 # if ! newdrivestick
   if(speedface)
 # endif
-   straight *= throttle, rot *= throttle/2;
 # if ! newdrivestick
    rot = sloper(rot); //same reason above
 # endif

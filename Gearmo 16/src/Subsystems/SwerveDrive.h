@@ -67,8 +67,13 @@ public:
 	SwerveDrive();
 	void InitDefaultCommand();
 /** @param leftright motion **/
+	void Drive(float x, float y, float twist);
 	void Drive(float x, float y, float twist,
-	  float throttle, bool=false);
+	  float throttle);
+	enum Align{align};
+	void Drive(float x, float y, float twist,
+	  Align);
+
 	bool OnTarget();
 # if ! newdrivestick
 	void Toggler();
@@ -84,6 +89,7 @@ public:
 	inline bool IsThirdPerson() const;
 //does Set{First|Third}Person(orientation)
 	void SetPerson(float orientation, bool isThird);
+	void ClickOrient();
 // "forward" is (360*orientation) degrees from the robot's initial orientation
 	inline void SetThirdPerson(float orientation);
 // "forward" is (360*orientation) degrees from the robot's current orientation
@@ -110,6 +116,10 @@ inline void SwerveDrive::SetFirstPerson(float dir)
 
 inline void SwerveDrive::SetThirdPerson(float dir)
 	{SetPerson(dir, true);}
+
+inline void SwerveDrive::ClickOrient() {
+	Orienter /= i;
+}
 
 inline void SwerveDrive::ZeroOrientation()
 	{iSensor.SetFusedHeading(0);}

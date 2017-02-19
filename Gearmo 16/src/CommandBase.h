@@ -8,6 +8,7 @@
 #include "OI.h"
 #include "WPILib.h"
 #include "Subsystems/BPM.h"
+#include "Subsystems/Winch.h"
 /**
  * The base for all commands. All atomic commands should subclass CommandBase.
  * CommandBase stores creates and stores each control system. To access a
@@ -26,6 +27,7 @@ public:
 	static SwerveDrive *swerveDrive;
 	static Shooter * shooter;
 	static OI *oi;
+	static Winch *winch;
 };
 
 #endif
