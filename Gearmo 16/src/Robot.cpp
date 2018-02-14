@@ -30,25 +30,24 @@ namespace LaunchGeom
  {return rpscvrt * distance * sqrt(gslop / (distance * exitSlope - goalHt));}
 }
 
+typedef SendableChooser<Command*> AutoChooser;
+void SetAutoChoices(AutoChooser&);
+
 class Robot: public IterativeRobot {
 private:
 	//AnalogInput ultra;
 
 	Command *autonomousCommand;
-	SendableChooser<Command*> autoChooser;
+	AutoChooser autoChooser;
 	LiveWindow *lw;
 	void RobotInit() {
 		std::thread visionThread(VisionThread);
 		visionThread.detach();
 
+		SmartDashboard::PutString("working", "Working");
 		CommandBase::init(this);
 		autonomousCommand = 0; //TODO: real autonomous
-		//autoChooser.AddObject("totefield", new autoner(2.65)/*new Auto1*/);
-		//autoChooser.AddObject("toteramp", new autoner(3)/*new Auto2*/);
-		//autoChooser.AddObject("totebinfield", new autonerbot(2.85)/*new Auto3*/);
-		//autoChooser.AddObject("totebinramp", new autonerbot(3.25)/*new Auto4*/);
-		//autoChooser.AddDefault("nothing",0);
-		//SmartDashboard::PutData("Which autonomous?", &autoChooser);
+		SetAutoChoices(autoChooser);
 /*
 		SmartDashboard::PutNumber("launch speed", 55);
 		SmartDashboard::PutNumber("minimum launcher speed", 10);
@@ -65,8 +64,8 @@ private:
 	}
 
 	void AutonomousInit() {
-		autonomousCommand = static_cast<Command*>(autoChooser.GetSelected());
-		if (!autonomousCommand) autonomousCommand = new PickUp(true);
+		autonomousCommand = /*dynamic_cast<Command*>*/(autoChooser.GetSelected());
+		//if (!autonomousCommand) autonomousCommand = new PickUp(true);
 		if (autonomousCommand != NULL)
 			autonomousCommand->Start();
 		CommandBase::shooter->ReloadParams();
@@ -90,24 +89,7 @@ private:
 
 	void TeleopPeriodic() {
 		Scheduler::GetInstance()->Run();
-/*
-		CommandBase::shooter->RunShoot();
-*/
 		if(CommandBase::oi->OperatorStick().GetRawButton(9)) CommandBase::shooter->ReadPID();
-/*
-		bool latched = CommandBase::oi->OperatorStick().GetRawButton(6);
-		if (latched)
-			CommandBase::shooter->SetSpd(
-					80 * CommandBase::oi->OperatorStick().GetRawAxis(1));
-		else if (CommandBase::oi->OperatorStick().GetRawButton(8))
-			CommandBase::shooter->ReadLaunchSpd();
-		else
-			CommandBase::shooter->AddSpd(
-					2 * (CommandBase::oi->OperatorStick().GetRawButton(5)
-						- CommandBase::oi->OperatorStick().GetRawButton(7)));
-
-		SmartDashboard::PutNumber("launchspd", CommandBase::shooter->GetSpd());
-*/
 	}
 
 	void TestPeriodic() {
