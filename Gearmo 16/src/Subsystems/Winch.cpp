@@ -10,12 +10,13 @@ void Winch::InitDefaultCommand() {
 	// Set the default command for a subsystem here.
 	SetDefaultCommand(new RopeClimb(false));
 }
+//xxx delete me
 
 // Put methods for controlling this subsystem
 // here. Call these from Commands.
 
 void Winch::Climb(bool runMotor) {
 	if(runMotor)
-	everest.Set(1);//TODO: Check polarity of winch
+	everest.Set(1);
 	else everest.Set(0);
 }
