@@ -2,12 +2,14 @@
 #define BPM_H
 
 #include "WPILib.h"
-#include "CANTalon.h"
+
+#include <ctre/phoenix.h>
+
 #include <Commands/Subsystem.h>
 //Ball Pickup Mechanism
 class BPM : public Subsystem {
 private:
-	CANTalon bpMotor;
+	WPI_TalonSRX bpMotor;
 	// It's desirable that everything possible under private except
 	// for methods that implement subsystem capabilities
 

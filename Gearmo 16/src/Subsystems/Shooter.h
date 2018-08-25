@@ -2,12 +2,14 @@
 #define Shooter_H
 
 #include <WPILib.h>
-#include "CANTalon.h"
+
+#include <ctre/phoenix.h>
+
 #include "PIDRateCounter.h"
 
 class Shooter : public Subsystem {
-	CANTalon launcher;
-	CANTalon bubbler;
+	WPI_TalonSRX launcher;
+	WPI_TalonSRX bubbler;
 	PIDRateCounter launchSpd;
 	float bubbleSpd;
 	float nomSpd;

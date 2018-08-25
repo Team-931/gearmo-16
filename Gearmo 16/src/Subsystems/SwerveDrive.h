@@ -4,8 +4,9 @@
 #include "Commands/Subsystem.h"
 #include <WPILib.h>
 #include <complex>
-#include <CANTalon.h>
-#include <PigeonImu.h>
+
+#include <ctre/phoenix.h>
+
 # define newdrivestick 1
 //#include "CommandBase.h"
 # define OldEncoder 0
@@ -15,8 +16,8 @@ static const unsigned numWheels=4;
 constexpr complex i = {0,1};
 static constexpr float minimal = 1.0/1024;
 class SwerveDrive: public Subsystem
-{CANTalon iDrone;
- PigeonImu iSensor;
+{TalonSRX iDrone;
+ PigeonIMU iSensor;
  	// set if headings are accelerometer compensated
 	bool ThirdPerson = false,
 			AngleSetting = false;
@@ -37,7 +38,7 @@ class SwerveDrive: public Subsystem
 # else
    AnalogInput encoder;
 # endif
-   CANTalon rotSpeed, drvSpeed; /*the motors are cims and pg (34?) .*/
+   WPI_TalonSRX rotSpeed, drvSpeed; /*the motors are cims and pg (34?) .*/
    static uint32_t ix;
    uint32_t this_ix;
    static constexpr double maxRot =
