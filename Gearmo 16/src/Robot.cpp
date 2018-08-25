@@ -12,6 +12,8 @@ typedef autoPIH autoner;
 //#include "Subsystems/Winch.h"
 #include "Commands/POV.h"
 
+#include <LiveWindow/LiveWindow.h>
+
 void VisionThread();
 
 namespace LaunchGeom
